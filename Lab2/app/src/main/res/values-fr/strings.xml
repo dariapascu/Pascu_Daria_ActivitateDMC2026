@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Lab2</string>
+    <string name="welcome_msg">Bienvenue sur l\'application!</string>
+    <string name="btn_text">Presse-moi</string>
+    <string name="hint_name">Nom et prenom</string>
+</resources>

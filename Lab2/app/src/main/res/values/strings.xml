@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Lab2</string>
+    <string name="welcome_msg">Bun venit in aplicatie!</string>
+    <string name="btn_text">Apasa-ma</string>
+    <string name="hint_name">Nume si Prenume</string>
+</resources>
