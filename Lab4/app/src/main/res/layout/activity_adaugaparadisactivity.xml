@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F0F4F8">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Adauga Paradis"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#1A237E"
+            android:layout_marginBottom="24dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Denumire"
+            android:textSize="14sp"
+            android:textColor="#616161"
+            android:layout_marginBottom="4dp"/>
+
+        <EditText
+            android:id="@+id/etDenumire"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="ex: Maldive"
+            android:inputType="text"
+            android:background="@drawable/input_background"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vizitatori/an"
+            android:textSize="14sp"
+            android:textColor="#616161"
+            android:layout_marginBottom="4dp"/>
+
+        <EditText
+            android:id="@+id/etVizitatori"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="ex: 500000"
+            android:inputType="number"
+            android:background="@drawable/input_background"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Temperatura medie (C)"
+            android:textSize="14sp"
+            android:textColor="#616161"
+            android:layout_marginBottom="4dp"/>
+
+        <EditText
+            android:id="@+id/etTemperatura"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="ex: 30.5"
+            android:inputType="numberDecimal"
+            android:background="@drawable/input_background"
+            android:padding="12dp"
+            android:layout_marginBottom="20dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tip paradis"
+            android:textSize="14sp"
+            android:textColor="#616161"
+            android:layout_marginBottom="4dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerTip"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/input_background"
+            android:layout_marginBottom="20dp"/>
+
+        <CheckBox
+            android:id="@+id/cbAccesibil"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Accesibil publicului larg"
+            android:textSize="15sp"
+            android:textColor="#424242"
+            android:layout_marginBottom="12dp"/>
+
+        <ToggleButton
+            android:id="@+id/toggleAccesibil"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textOn="Accesibil: ON"
+            android:textOff="Accesibil: OFF"
+            android:layout_marginBottom="20dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sezon recomandat"
+            android:textSize="14sp"
+            android:textColor="#616161"
+            android:layout_marginBottom="4dp"/>
+
+        <RadioGroup
+            android:id="@+id/rgRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+
+            <RadioButton
+                android:id="@+id/rb1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vara"
+                android:layout_marginEnd="12dp"/>
+
+            <RadioButton
+                android:id="@+id/rb2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Iarna"
+                android:layout_marginEnd="12dp"/>
+
+            <RadioButton
+                android:id="@+id/rb3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tot anul"
+                android:checked="true"/>
+
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Evaluare paradis"
+            android:textSize="14sp"
+            android:textColor="#616161"
+            android:layout_marginBottom="4dp"/>
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:rating="3"
+            android:stepSize="0.5"
+            android:layout_marginBottom="4dp"/>
+
+        <TextView
+            android:id="@+id/tvRatingValoare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rating: 3.0"
+            android:textSize="13sp"
+            android:textColor="#9E9E9E"
+            android:layout_marginBottom="20dp"/>
+
+        <Switch
+            android:id="@+id/switchRecomandat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Recomandat de editor"
+            android:textSize="15sp"
+            android:textColor="#424242"
+            android:layout_marginBottom="32dp"/>
+
+        <Button
+            android:id="@+id/btnSalveaza"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="Salveaza"
+            android:textSize="16sp"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#1A237E"/>
+
+    </LinearLayout>
+</ScrollView>

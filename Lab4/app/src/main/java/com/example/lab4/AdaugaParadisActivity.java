@@ -1,0 +1,97 @@
+package com.example.lab4;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.*;
+
+public class AdaugaParadisActivity extends AppCompatActivity {
+
+    private EditText etDenumire, etVizitatori, etTemperatura;
+    private CheckBox cbAccesibil;
+    private RadioGroup rgRating;
+    private RadioButton rb1, rb2, rb3;
+    private Spinner spinnerTip;
+    private RatingBar ratingBar;
+    private Switch switchRecomandat;
+    private ToggleButton toggleAccesibil;
+    private Button btnSalveaza;
+    private TextView tvRatingValoare;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_adaugaparadisactivity);
+
+        etDenumire      = findViewById(R.id.etDenumire);
+        etVizitatori    = findViewById(R.id.etVizitatori);
+        etTemperatura   = findViewById(R.id.etTemperatura);
+        cbAccesibil     = findViewById(R.id.cbAccesibil);
+        rgRating        = findViewById(R.id.rgRating);
+        rb1             = findViewById(R.id.rb1);
+        rb2             = findViewById(R.id.rb2);
+        rb3             = findViewById(R.id.rb3);
+        spinnerTip      = findViewById(R.id.spinnerTip);
+        ratingBar       = findViewById(R.id.ratingBar);
+        switchRecomandat = findViewById(R.id.switchRecomandat);
+        toggleAccesibil = findViewById(R.id.toggleAccesibil);
+        btnSalveaza     = findViewById(R.id.btnSalveaza);
+        tvRatingValoare = findViewById(R.id.tvRatingValoare);
+
+        TipParadis[] tipuri = TipParadis.values();
+        String[] tipuriStr = new String[tipuri.length];
+        for (int i = 0; i < tipuri.length; i++) tipuriStr[i] = tipuri[i].name();
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this, android.R.layout.simple_spinner_item, tipuriStr);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerTip.setAdapter(adapter);
+
+        cbAccesibil.setOnCheckedChangeListener((btn, isChecked) ->
+                toggleAccesibil.setChecked(isChecked));
+        toggleAccesibil.setOnCheckedChangeListener((btn, isChecked) ->
+                cbAccesibil.setChecked(isChecked));
+
+        ratingBar.setOnRatingBarChangeListener((rb, rating, fromUser) ->
+                tvRatingValoare.setText("Rating: " + rating));
+
+        btnSalveaza.setOnClickListener(v -> salveazaParadis());
+    }
+
+    private void salveazaParadis() {
+        String denumire = etDenumire.getText().toString().trim();
+        if (denumire.isEmpty()) {
+            etDenumire.setError("Introduceti denumirea!");
+            return;
+        }
+
+        int vizitatori = 0;
+        try {
+            vizitatori = Integer.parseInt(etVizitatori.getText().toString().trim());
+        } catch (NumberFormatException e) {
+            etVizitatori.setError("Introduceti un numar valid!");
+            return;
+        }
+
+        double temperatura = 25.0;
+        try {
+            temperatura = Double.parseDouble(etTemperatura.getText().toString().trim());
+        } catch (NumberFormatException e) {
+            etTemperatura.setError("Introduceti o temperatura valida!");
+            return;
+        }
+
+        boolean accesibil = cbAccesibil.isChecked();
+
+        TipParadis tip = TipParadis.values()[spinnerTip.getSelectedItemPosition()];
+
+        Paradis paradis = new Paradis(denumire, vizitatori, accesibil, temperatura, tip);
+
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("paradis", paradis);
+        setResult(Activity.RESULT_OK, resultIntent);
+        finish();
+    }
+}
