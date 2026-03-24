@@ -10,7 +10,9 @@
         android:orientation="vertical"
         android:padding="24dp">
 
+        <!-- Titlu dinamic (se schimba intre Adauga / Modifica) -->
         <TextView
+            android:id="@+id/tvTitlu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Adauga Paradis"
@@ -177,6 +179,21 @@
             android:textSize="15sp"
             android:textColor="#424242"
             android:layout_marginBottom="32dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Data sejur"
+            android:textSize="14sp"
+            android:textColor="#616161"
+            android:layout_marginBottom="4dp"/>
+
+        <DatePicker
+            android:id="@+id/datePicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:calendarViewShown="false"
+            android:layout_marginBottom="20dp"/>
 
         <Button
             android:id="@+id/btnSalveaza"

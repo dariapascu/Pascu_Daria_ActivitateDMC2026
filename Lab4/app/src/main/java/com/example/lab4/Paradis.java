@@ -3,6 +3,10 @@ package com.example.lab4;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class Paradis implements Parcelable {
 
     private String denumire;
@@ -15,22 +19,26 @@ public class Paradis implements Parcelable {
 
     private TipParadis tip;
 
+    private Date sejurDate;
+
     public Paradis() {
         this.denumire = "Necunoscut";
         this.vizitatori = 0;
         this.esteAccesibil = true;
         this.temperaturaMetdie = 25.0;
         this.tip = TipParadis.TROPICAL;
+        this.sejurDate = new Date();
     }
 
     public Paradis(String denumire, int vizitatori,
                    boolean esteAccesibil, double temperaturaMetdie,
-                   TipParadis tip) {
+                   TipParadis tip, Date sejurDate) {
         this.denumire = denumire;
         this.vizitatori = vizitatori;
         this.esteAccesibil = esteAccesibil;
         this.temperaturaMetdie = temperaturaMetdie;
         this.tip = tip;
+        this.sejurDate = sejurDate;
     }
 
 
@@ -40,6 +48,8 @@ public class Paradis implements Parcelable {
         esteAccesibil    = in.readByte() != 0;
         temperaturaMetdie = in.readDouble();
         tip              = TipParadis.valueOf(in.readString());
+        long millis       = in.readLong();
+        sejurDate         = millis == -1 ? null : new Date(millis);
     }
 
     public static final Creator<Paradis> CREATOR = new Creator<Paradis>() {
@@ -60,6 +70,7 @@ public class Paradis implements Parcelable {
         dest.writeByte((byte) (esteAccesibil ? 1 : 0));
         dest.writeDouble(temperaturaMetdie);
         dest.writeString(tip.name());
+        dest.writeLong(sejurDate != null ? sejurDate.getTime() : -1);
     }
 
 
@@ -80,14 +91,17 @@ public class Paradis implements Parcelable {
     public TipParadis getTip() { return tip; }
     public void setTip(TipParadis tip) { this.tip = tip; }
 
+    public Date getSejurDate() { return sejurDate; }
+    public void setSejurDate(Date sejurDate) { this.sejurDate = sejurDate; }
+
     @Override
     public String toString() {
-        return "Paradis {" +
-                "\n  Denumire: " + denumire +
-                "\n  Vizitatori/an: " + vizitatori +
-                "\n  Accesibil: " + (esteAccesibil ? "Da" : "Nu") +
-                "\n  Temperatura medie: " + temperaturaMetdie + " C" +
-                "\n  Tip: " + tip +
-                "\n}";
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        String dataStr = sejurDate != null ? sdf.format(sejurDate) : "N/A";
+        return denumire + " | " + tip.name() +
+                " | " + vizitatori + " vizitatori" +
+                " | " + temperaturaMetdie + " C" +
+                " | " + (esteAccesibil ? "Accesibil" : "Inaccesibil") +
+                " | Sejur: " + dataStr;
     }
 }

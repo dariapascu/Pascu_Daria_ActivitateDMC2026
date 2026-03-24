@@ -7,48 +7,60 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.*;
 
+import java.util.Calendar;
+import java.util.Date;
+
 public class AdaugaParadisActivity extends AppCompatActivity {
 
-    private EditText etDenumire, etVizitatori, etTemperatura;
-    private CheckBox cbAccesibil;
-    private RadioGroup rgRating;
-    private RadioButton rb1, rb2, rb3;
-    private Spinner spinnerTip;
-    private RatingBar ratingBar;
-    private Switch switchRecomandat;
+    private EditText     etDenumire, etVizitatori, etTemperatura;
+    private CheckBox     cbAccesibil;
+    private RadioGroup   rgRating;
+    private RadioButton  rb1, rb2, rb3;
+    private Spinner      spinnerTip;
+    private RatingBar    ratingBar;
+    private Switch       switchRecomandat;
     private ToggleButton toggleAccesibil;
-    private Button btnSalveaza;
-    private TextView tvRatingValoare;
+    private Button       btnSalveaza;
+    private TextView     tvRatingValoare;
+    private DatePicker   datePicker;
+    private TextView     tvTitlu;
+
+    // Obiectul primit pentru editare (null daca e adaugare noua)
+    private Paradis paradisDeEditat = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_adaugaparadisactivity);
 
-        etDenumire      = findViewById(R.id.etDenumire);
-        etVizitatori    = findViewById(R.id.etVizitatori);
-        etTemperatura   = findViewById(R.id.etTemperatura);
-        cbAccesibil     = findViewById(R.id.cbAccesibil);
-        rgRating        = findViewById(R.id.rgRating);
-        rb1             = findViewById(R.id.rb1);
-        rb2             = findViewById(R.id.rb2);
-        rb3             = findViewById(R.id.rb3);
-        spinnerTip      = findViewById(R.id.spinnerTip);
-        ratingBar       = findViewById(R.id.ratingBar);
+        etDenumire       = findViewById(R.id.etDenumire);
+        etVizitatori     = findViewById(R.id.etVizitatori);
+        etTemperatura    = findViewById(R.id.etTemperatura);
+        cbAccesibil      = findViewById(R.id.cbAccesibil);
+        rgRating         = findViewById(R.id.rgRating);
+        rb1              = findViewById(R.id.rb1);
+        rb2              = findViewById(R.id.rb2);
+        rb3              = findViewById(R.id.rb3);
+        spinnerTip       = findViewById(R.id.spinnerTip);
+        ratingBar        = findViewById(R.id.ratingBar);
         switchRecomandat = findViewById(R.id.switchRecomandat);
-        toggleAccesibil = findViewById(R.id.toggleAccesibil);
-        btnSalveaza     = findViewById(R.id.btnSalveaza);
-        tvRatingValoare = findViewById(R.id.tvRatingValoare);
+        toggleAccesibil  = findViewById(R.id.toggleAccesibil);
+        btnSalveaza      = findViewById(R.id.btnSalveaza);
+        tvRatingValoare  = findViewById(R.id.tvRatingValoare);
+        datePicker       = findViewById(R.id.datePicker);
+        tvTitlu          = findViewById(R.id.tvTitlu);
 
+        // Configureaza Spinner cu tipurile de paradis
         TipParadis[] tipuri = TipParadis.values();
         String[] tipuriStr = new String[tipuri.length];
         for (int i = 0; i < tipuri.length; i++) tipuriStr[i] = tipuri[i].name();
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+        ArrayAdapter<String> adapterSpinner = new ArrayAdapter<>(
                 this, android.R.layout.simple_spinner_item, tipuriStr);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerTip.setAdapter(adapter);
+        adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerTip.setAdapter(adapterSpinner);
 
+        // Sincronizare CheckBox <-> ToggleButton
         cbAccesibil.setOnCheckedChangeListener((btn, isChecked) ->
                 toggleAccesibil.setChecked(isChecked));
         toggleAccesibil.setOnCheckedChangeListener((btn, isChecked) ->
@@ -57,7 +69,52 @@ public class AdaugaParadisActivity extends AppCompatActivity {
         ratingBar.setOnRatingBarChangeListener((rb, rating, fromUser) ->
                 tvRatingValoare.setText("Rating: " + rating));
 
+        // Verificam daca am primit un obiect Paradis pentru editare
+        paradisDeEditat = getIntent().getParcelableExtra("paradis");
+
+        if (paradisDeEditat != null) {
+            // MOD EDITARE: completam campurile cu datele obiectului
+            tvTitlu.setText("Modifica Paradis");
+            btnSalveaza.setText("Salveaza modificarile");
+            precompletareCampuri(paradisDeEditat);
+        } else {
+            // MOD ADAUGARE: titlu implicit
+            tvTitlu.setText("Adauga Paradis");
+        }
+
         btnSalveaza.setOnClickListener(v -> salveazaParadis());
+    }
+
+    /**
+     * Completeaza toate campurile formularului cu valorile obiectului primit.
+     */
+    private void precompletareCampuri(Paradis p) {
+        etDenumire.setText(p.getDenumire());
+        etVizitatori.setText(String.valueOf(p.getVizitatori()));
+        etTemperatura.setText(String.valueOf(p.getTemperaturaMetdie()));
+
+        cbAccesibil.setChecked(p.isEsteAccesibil());
+        toggleAccesibil.setChecked(p.isEsteAccesibil());
+
+        // Selectam tipul corect in Spinner
+        TipParadis[] tipuri = TipParadis.values();
+        for (int i = 0; i < tipuri.length; i++) {
+            if (tipuri[i] == p.getTip()) {
+                spinnerTip.setSelection(i);
+                break;
+            }
+        }
+
+        // Data sejur
+        if (p.getSejurDate() != null) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(p.getSejurDate());
+            datePicker.updateDate(
+                    cal.get(Calendar.YEAR),
+                    cal.get(Calendar.MONTH),
+                    cal.get(Calendar.DAY_OF_MONTH)
+            );
+        }
     }
 
     private void salveazaParadis() {
@@ -67,7 +124,7 @@ public class AdaugaParadisActivity extends AppCompatActivity {
             return;
         }
 
-        int vizitatori = 0;
+        int vizitatori;
         try {
             vizitatori = Integer.parseInt(etVizitatori.getText().toString().trim());
         } catch (NumberFormatException e) {
@@ -75,7 +132,7 @@ public class AdaugaParadisActivity extends AppCompatActivity {
             return;
         }
 
-        double temperatura = 25.0;
+        double temperatura;
         try {
             temperatura = Double.parseDouble(etTemperatura.getText().toString().trim());
         } catch (NumberFormatException e) {
@@ -84,13 +141,19 @@ public class AdaugaParadisActivity extends AppCompatActivity {
         }
 
         boolean accesibil = cbAccesibil.isChecked();
-
         TipParadis tip = TipParadis.values()[spinnerTip.getSelectedItemPosition()];
 
-        Paradis paradis = new Paradis(denumire, vizitatori, accesibil, temperatura, tip);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth(),
+                0, 0, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        Date sejurDate = calendar.getTime();
+
+        // Construim obiectul (nou sau actualizat - acelasi rezultat pentru MainActivity)
+        Paradis paradis = new Paradis(denumire, vizitatori, accesibil, temperatura, tip, sejurDate);
 
         Intent resultIntent = new Intent();
-        resultIntent.putExtra("paradis", paradis);
+        resultIntent.putExtra("paradis", paradis);   // Parcelable
         setResult(Activity.RESULT_OK, resultIntent);
         finish();
     }

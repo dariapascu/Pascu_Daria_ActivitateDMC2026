@@ -10,15 +10,29 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView tvPlaceholder, tvDenumire, tvVizitatori,
-            tvAccesibil, tvTemperatura, tvTip;
-    private Button btnAdauga;
+    private static final String EXTRA_PARADIS     = "paradis";
+    private static final String EXTRA_POZITIE     = "pozitie";
+    private static final int    MOD_ADAUGA        = -1;
 
-    private final ActivityResultLauncher<Intent> adaugaLauncher =
+    private TextView tvPlaceholder;
+    private ListView listViewParadisuri;
+    private Button   btnAdauga;
+
+    private ArrayList<Paradis> listaParadisuri = new ArrayList<>();
+    private ParadisAdapter adapter;
+
+    // Retine pozitia elementului care se editeaza (-1 = adaugare noua)
+    private int pozitieEditare = MOD_ADAUGA;
+
+    private final ActivityResultLauncher<Intent> launcher =
             registerForActivityResult(
                     new ActivityResultContracts.StartActivityForResult(),
                     this::handleResult
@@ -29,42 +43,68 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        tvPlaceholder = findViewById(R.id.tvPlaceholder);
-        tvDenumire    = findViewById(R.id.tvDenumire);
-        tvVizitatori  = findViewById(R.id.tvVizitatori);
-        tvAccesibil   = findViewById(R.id.tvAccesibil);
-        tvTemperatura = findViewById(R.id.tvTemperatura);
-        tvTip         = findViewById(R.id.tvTip);
-        btnAdauga     = findViewById(R.id.btnAdauga);
+        tvPlaceholder      = findViewById(R.id.tvPlaceholder);
+        listViewParadisuri = findViewById(R.id.listViewParadisuri);
+        btnAdauga          = findViewById(R.id.btnAdauga);
 
-        btnAdauga.setOnClickListener(v -> {
+        // Adapter personalizat in loc de ArrayAdapter<Paradis> generic
+        adapter = new ParadisAdapter(this, listaParadisuri);
+        listViewParadisuri.setAdapter(adapter);
+
+        // Click simplu -> deschide activitatea de editare cu datele obiectului selectat
+        listViewParadisuri.setOnItemClickListener((parent, view, position, id) -> {
+            pozitieEditare = position;
+            Paradis selectat = listaParadisuri.get(position);
+
             Intent intent = new Intent(MainActivity.this, AdaugaParadisActivity.class);
-            adaugaLauncher.launch(intent);
+            intent.putExtra(EXTRA_PARADIS, selectat);      // trimitem obiectul via Parcelable
+            intent.putExtra(EXTRA_POZITIE, position);
+            launcher.launch(intent);
+        });
+
+        // Long click -> stergere
+        listViewParadisuri.setOnItemLongClickListener((parent, view, position, id) -> {
+            Paradis sters = listaParadisuri.get(position);
+            listaParadisuri.remove(position);
+            adapter.notifyDataSetChanged();
+
+            Toast.makeText(this,
+                    "\"" + sters.getDenumire() + "\" a fost sters.",
+                    Toast.LENGTH_SHORT).show();
+
+            if (listaParadisuri.isEmpty()) {
+                listViewParadisuri.setVisibility(View.GONE);
+                tvPlaceholder.setVisibility(View.VISIBLE);
+            }
+            return true;
+        });
+
+        // Buton adauga -> mod adaugare (fara obiect preexistent)
+        btnAdauga.setOnClickListener(v -> {
+            pozitieEditare = MOD_ADAUGA;
+            Intent intent = new Intent(MainActivity.this, AdaugaParadisActivity.class);
+            // Nu trimitem niciun EXTRA_PARADIS -> activitatea stie ca e adaugare noua
+            launcher.launch(intent);
         });
     }
 
     private void handleResult(ActivityResult result) {
-        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-            Paradis paradis = result.getData().getParcelableExtra("paradis");
-            if (paradis != null) {
-                afiseazaParadis(paradis);
-            }
+        if (result.getResultCode() != Activity.RESULT_OK || result.getData() == null) return;
+
+        Paradis paradis = result.getData().getParcelableExtra(EXTRA_PARADIS);
+        if (paradis == null) return;
+
+        if (pozitieEditare == MOD_ADAUGA) {
+            // Adaugare noua
+            listaParadisuri.add(paradis);
+        } else {
+            // Modificare obiect existent la pozitia salvata
+            listaParadisuri.set(pozitieEditare, paradis);
+            pozitieEditare = MOD_ADAUGA; // reset
         }
-    }
 
-    private void afiseazaParadis(Paradis p) {
+        adapter.notifyDataSetChanged();
         tvPlaceholder.setVisibility(View.GONE);
-
-        tvDenumire.setVisibility(View.VISIBLE);
-        tvVizitatori.setVisibility(View.VISIBLE);
-        tvAccesibil.setVisibility(View.VISIBLE);
-        tvTemperatura.setVisibility(View.VISIBLE);
-        tvTip.setVisibility(View.VISIBLE);
-
-        tvDenumire.setText("Denumire: " + p.getDenumire());
-        tvVizitatori.setText("Vizitatori/an: " + p.getVizitatori());
-        tvAccesibil.setText("Accesibil: " + (p.isEsteAccesibil() ? "Da" : "Nu"));
-        tvTemperatura.setText("Temperatura medie: " + p.getTemperaturaMetdie() + " °C");
-        tvTip.setText("Tip: " + p.getTip().name());
+        listViewParadisuri.setVisibility(View.VISIBLE);
     }
 }
