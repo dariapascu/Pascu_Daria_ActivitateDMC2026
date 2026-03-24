@@ -10,7 +10,6 @@
         android:orientation="vertical"
         android:padding="24dp">
 
-        <!-- Titlu dinamic (se schimba intre Adauga / Modifica) -->
         <TextView
             android:id="@+id/tvTitlu"
             android:layout_width="wrap_content"

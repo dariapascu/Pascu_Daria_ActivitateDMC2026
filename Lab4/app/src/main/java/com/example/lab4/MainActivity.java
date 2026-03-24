@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Paradis> listaParadisuri = new ArrayList<>();
     private ParadisAdapter adapter;
 
-    // Retine pozitia elementului care se editeaza (-1 = adaugare noua)
     private int pozitieEditare = MOD_ADAUGA;
 
     private final ActivityResultLauncher<Intent> launcher =
@@ -47,22 +46,19 @@ public class MainActivity extends AppCompatActivity {
         listViewParadisuri = findViewById(R.id.listViewParadisuri);
         btnAdauga          = findViewById(R.id.btnAdauga);
 
-        // Adapter personalizat in loc de ArrayAdapter<Paradis> generic
         adapter = new ParadisAdapter(this, listaParadisuri);
         listViewParadisuri.setAdapter(adapter);
 
-        // Click simplu -> deschide activitatea de editare cu datele obiectului selectat
         listViewParadisuri.setOnItemClickListener((parent, view, position, id) -> {
             pozitieEditare = position;
             Paradis selectat = listaParadisuri.get(position);
 
             Intent intent = new Intent(MainActivity.this, AdaugaParadisActivity.class);
-            intent.putExtra(EXTRA_PARADIS, selectat);      // trimitem obiectul via Parcelable
+            intent.putExtra(EXTRA_PARADIS, selectat);
             intent.putExtra(EXTRA_POZITIE, position);
             launcher.launch(intent);
         });
 
-        // Long click -> stergere
         listViewParadisuri.setOnItemLongClickListener((parent, view, position, id) -> {
             Paradis sters = listaParadisuri.get(position);
             listaParadisuri.remove(position);
@@ -79,11 +75,9 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
-        // Buton adauga -> mod adaugare (fara obiect preexistent)
         btnAdauga.setOnClickListener(v -> {
             pozitieEditare = MOD_ADAUGA;
             Intent intent = new Intent(MainActivity.this, AdaugaParadisActivity.class);
-            // Nu trimitem niciun EXTRA_PARADIS -> activitatea stie ca e adaugare noua
             launcher.launch(intent);
         });
     }
@@ -95,12 +89,10 @@ public class MainActivity extends AppCompatActivity {
         if (paradis == null) return;
 
         if (pozitieEditare == MOD_ADAUGA) {
-            // Adaugare noua
             listaParadisuri.add(paradis);
         } else {
-            // Modificare obiect existent la pozitia salvata
             listaParadisuri.set(pozitieEditare, paradis);
-            pozitieEditare = MOD_ADAUGA; // reset
+            pozitieEditare = MOD_ADAUGA;
         }
 
         adapter.notifyDataSetChanged();

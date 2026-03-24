@@ -25,7 +25,6 @@ public class AdaugaParadisActivity extends AppCompatActivity {
     private DatePicker   datePicker;
     private TextView     tvTitlu;
 
-    // Obiectul primit pentru editare (null daca e adaugare noua)
     private Paradis paradisDeEditat = null;
 
     @Override
@@ -50,7 +49,6 @@ public class AdaugaParadisActivity extends AppCompatActivity {
         datePicker       = findViewById(R.id.datePicker);
         tvTitlu          = findViewById(R.id.tvTitlu);
 
-        // Configureaza Spinner cu tipurile de paradis
         TipParadis[] tipuri = TipParadis.values();
         String[] tipuriStr = new String[tipuri.length];
         for (int i = 0; i < tipuri.length; i++) tipuriStr[i] = tipuri[i].name();
@@ -60,7 +58,6 @@ public class AdaugaParadisActivity extends AppCompatActivity {
         adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerTip.setAdapter(adapterSpinner);
 
-        // Sincronizare CheckBox <-> ToggleButton
         cbAccesibil.setOnCheckedChangeListener((btn, isChecked) ->
                 toggleAccesibil.setChecked(isChecked));
         toggleAccesibil.setOnCheckedChangeListener((btn, isChecked) ->
@@ -69,25 +66,19 @@ public class AdaugaParadisActivity extends AppCompatActivity {
         ratingBar.setOnRatingBarChangeListener((rb, rating, fromUser) ->
                 tvRatingValoare.setText("Rating: " + rating));
 
-        // Verificam daca am primit un obiect Paradis pentru editare
         paradisDeEditat = getIntent().getParcelableExtra("paradis");
 
         if (paradisDeEditat != null) {
-            // MOD EDITARE: completam campurile cu datele obiectului
             tvTitlu.setText("Modifica Paradis");
             btnSalveaza.setText("Salveaza modificarile");
             precompletareCampuri(paradisDeEditat);
         } else {
-            // MOD ADAUGARE: titlu implicit
             tvTitlu.setText("Adauga Paradis");
         }
 
         btnSalveaza.setOnClickListener(v -> salveazaParadis());
     }
 
-    /**
-     * Completeaza toate campurile formularului cu valorile obiectului primit.
-     */
     private void precompletareCampuri(Paradis p) {
         etDenumire.setText(p.getDenumire());
         etVizitatori.setText(String.valueOf(p.getVizitatori()));
@@ -96,7 +87,6 @@ public class AdaugaParadisActivity extends AppCompatActivity {
         cbAccesibil.setChecked(p.isEsteAccesibil());
         toggleAccesibil.setChecked(p.isEsteAccesibil());
 
-        // Selectam tipul corect in Spinner
         TipParadis[] tipuri = TipParadis.values();
         for (int i = 0; i < tipuri.length; i++) {
             if (tipuri[i] == p.getTip()) {
@@ -105,7 +95,6 @@ public class AdaugaParadisActivity extends AppCompatActivity {
             }
         }
 
-        // Data sejur
         if (p.getSejurDate() != null) {
             Calendar cal = Calendar.getInstance();
             cal.setTime(p.getSejurDate());
@@ -149,11 +138,10 @@ public class AdaugaParadisActivity extends AppCompatActivity {
         calendar.set(Calendar.MILLISECOND, 0);
         Date sejurDate = calendar.getTime();
 
-        // Construim obiectul (nou sau actualizat - acelasi rezultat pentru MainActivity)
-        Paradis paradis = new Paradis(denumire, vizitatori, accesibil, temperatura, tip, sejurDate);
+       Paradis paradis = new Paradis(denumire, vizitatori, accesibil, temperatura, tip, sejurDate);
 
         Intent resultIntent = new Intent();
-        resultIntent.putExtra("paradis", paradis);   // Parcelable
+        resultIntent.putExtra("paradis", paradis);
         setResult(Activity.RESULT_OK, resultIntent);
         finish();
     }
