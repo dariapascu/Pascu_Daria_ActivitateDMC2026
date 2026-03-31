@@ -3,10 +3,18 @@ package com.example.lab4;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -49,6 +57,8 @@ public class AdaugaParadisActivity extends AppCompatActivity {
         datePicker       = findViewById(R.id.datePicker);
         tvTitlu          = findViewById(R.id.tvTitlu);
 
+        aplicaSetariText();
+
         TipParadis[] tipuri = TipParadis.values();
         String[] tipuriStr = new String[tipuri.length];
         for (int i = 0; i < tipuri.length; i++) tipuriStr[i] = tipuri[i].name();
@@ -77,6 +87,28 @@ public class AdaugaParadisActivity extends AppCompatActivity {
         }
 
         btnSalveaza.setOnClickListener(v -> salveazaParadis());
+    }
+
+    private void aplicaSetariText() {
+        SharedPreferences prefs = getSharedPreferences("setari_app", Context.MODE_PRIVATE);
+        int dimensiune = prefs.getInt("text_size", 16);
+        String culoare = prefs.getString("text_color", "#000000");
+        int color = Color.parseColor(culoare);
+
+        View root = findViewById(android.R.id.content);
+        aplicaSetariPeView(root, dimensiune, color);
+    }
+
+    private void aplicaSetariPeView(View view, int dimensiune, int color) {
+        if (view instanceof ViewGroup) {
+            ViewGroup group = (ViewGroup) view;
+            for (int i = 0; i < group.getChildCount(); i++) {
+                aplicaSetariPeView(group.getChildAt(i), dimensiune, color);
+            }
+        } else if (view instanceof TextView) {
+            ((TextView) view).setTextSize(dimensiune);
+            ((TextView) view).setTextColor(color);
+        }
     }
 
     private void precompletareCampuri(Paradis p) {
@@ -140,9 +172,21 @@ public class AdaugaParadisActivity extends AppCompatActivity {
 
        Paradis paradis = new Paradis(denumire, vizitatori, accesibil, temperatura, tip, sejurDate);
 
+       salveazaInFisier(paradis);
+
         Intent resultIntent = new Intent();
         resultIntent.putExtra("paradis", paradis);
         setResult(Activity.RESULT_OK, resultIntent);
         finish();
     }
+
+    private void salveazaInFisier(Paradis p) {
+        try (FileOutputStream fos = openFileOutput("paradisuri.txt", Context.MODE_APPEND);
+             OutputStreamWriter osw = new OutputStreamWriter(fos)) {
+            osw.write(p.toString() + "\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

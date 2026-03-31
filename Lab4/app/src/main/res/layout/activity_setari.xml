@@ -1,0 +1,67 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dimensiune text"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp"/>
+
+    <SeekBar
+        android:id="@+id/seekBarDimensiune"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="32"
+        android:min="10"
+        android:layout_marginBottom="24dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Culoare text"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp"/>
+
+    <RadioGroup
+        android:id="@+id/rgCuloare"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp">
+
+        <RadioButton android:id="@+id/rbNegru"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Negru" android:checked="true"/>
+
+        <RadioButton android:id="@+id/rbRosu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rosu"/>
+
+        <RadioButton android:id="@+id/rbAlbastru"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Albastru"/>
+
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/tvPreview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Text de previzualizare"
+        android:layout_marginBottom="32dp"/>
+
+    <Button
+        android:id="@+id/btnSalveaza"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="Salveaza setarile"
+        android:backgroundTint="#1A237E"
+        android:textColor="#FFFFFF"/>
+
+</LinearLayout>
