@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- Zona de control (scrollabila) -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <!-- ===== SECTIUNEA 1: ADAUGARE ===== -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Adaugare carte"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/etTitlu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Titlu"
+                android:inputType="text" />
+
+            <EditText
+                android:id="@+id/etAutor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Autor"
+                android:inputType="text" />
+
+            <EditText
+                android:id="@+id/etAn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="An publicare"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/btnAdauga"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Adauga carte (Metoda 1)" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#BBBBBB"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp" />
+
+            <!-- ===== SECTIUNEA 2: SELECTII ===== -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Selectii"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:layout_marginBottom="4dp" />
+
+            <Button
+                android:id="@+id/btnToate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Afiseaza toate (Metoda 2)" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Cauta dupa titlu exact (Metoda 3):"
+                android:layout_marginTop="6dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/etCautaTitlu"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Titlu exact"
+                    android:inputType="text" />
+
+                <Button
+                    android:id="@+id/btnCautaTitlu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cauta" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Filtreaza dupa interval an (Metoda 4):"
+                android:layout_marginTop="6dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/etAnMin"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="An min"
+                    android:inputType="number" />
+
+                <EditText
+                    android:id="@+id/etAnMax"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="An max"
+                    android:inputType="number"
+                    android:layout_marginStart="8dp" />
+
+                <Button
+                    android:id="@+id/btnInterval"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Filtreaza" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#BBBBBB"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp" />
+
+            <!-- ===== SECTIUNEA 3: STERGERE ===== -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sterge unde an > valoare (Metoda 5):"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:layout_marginBottom="4dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/etStergeAn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="An limita"
+                    android:inputType="number" />
+
+                <Button
+                    android:id="@+id/btnSterge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sterge" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#BBBBBB"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp" />
+
+            <!-- ===== SECTIUNEA 4: INCREMENT ===== -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Incrementeaza an (titlu incepe cu litera) (Metoda 6):"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:layout_marginBottom="4dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/etLitera"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Litera (ex: A)"
+                    android:inputType="text"
+                    android:maxLength="1" />
+
+                <Button
+                    android:id="@+id/btnIncrement"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Incrementeaza" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- ===== LISTA REZULTATE ===== -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Lista carti:"
+        android:textStyle="bold"
+        android:paddingStart="12dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:background="#EEEEEE" />
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+</LinearLayout>
