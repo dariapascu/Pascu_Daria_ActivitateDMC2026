@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//d/ATM/Anul 4/Sem 2/Dispozitive Mobile/**)"
+    ]
+  }
+}
